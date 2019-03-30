@@ -1,0 +1,45 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.10"
+    config.ssh.insert_key = false
+
+    # Virtualbox configuration
+    config.vm.provider "virtualbox" do |v|
+        v.memory = "2048"
+        v.cpus = 1
+    end
+
+    # K8s loadbalancer configuration
+    config.vm.define "loadbalancer" do |lb|
+        lb.vm.network "private_network", ip: "192.168.199.31"
+        lb.vm.hostname = "loadbalancer"
+    end
+
+    # K8s master configuration
+    (1..2).each do |i|
+        config.vm.define "master-#{i}" do |master|
+            master.vm.network "private_network", ip: "192.168.199.1#{i}"
+            master.vm.hostname = "master-#{i}"
+            
+            # Virtualbox configuration
+            master.vm.provider "virtualbox" do |vb|
+                vb.memory = "3072"
+            end
+        end
+    end
+
+    # K8s worker configuration
+    (1..2).each do |i|
+        config.vm.define "worker-#{i}" do |worker|
+            worker.vm.network "private_network", ip: "192.168.199.2#{i}"
+            worker.vm.hostname = "worker-#{i}"
+        end
+    end
+
+    # SSH configuration by Ansible
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "ssh.yml"
+    end
+end

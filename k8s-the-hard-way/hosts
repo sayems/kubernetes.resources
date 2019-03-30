@@ -1,0 +1,14 @@
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[loadbalancer]
+192.168.199.31 ansible_user=vagrant
+
+[masters]
+192.168.199.11 ansible_user=vagrant
+192.168.199.12 ansible_user=vagrant
+
+[workers]
+192.168.199.21 ansible_user=vagrant
+192.168.199.22 ansible_user=vagrant
+ 

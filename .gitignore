@@ -1,2 +1,8 @@
+kubernetes/
 .idea/
 .DS_Store
+k8s-vagrant/k8s/join-command
+k8s-vagrant/.vagrant/
+k8s-vagrant/k8s/master.retry
+k8s-the-hard-way/.vagrant/
+*.log
