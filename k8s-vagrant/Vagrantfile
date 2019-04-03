@@ -1,14 +1,16 @@
-IMAGE_NAME = "bento/ubuntu-16.04"
+IMAGE_NAME = "bento/ubuntu-18.04"
 N = 2
 
 Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
+    # Virtualbox configuration
     config.vm.provider "virtualbox" do |v|
-        v.memory = 3072
+        v.memory = 4096
         v.cpus = 2
     end
       
+    # K8s master configuration
     config.vm.define "k8s-master" do |master|
         master.vm.box = IMAGE_NAME
         master.vm.network "private_network", ip: "192.168.50.10"
@@ -18,8 +20,9 @@ Vagrant.configure("2") do |config|
         end
     end
 
+    # K8s worker configuration
     (1..N).each do |i|
-        config.vm.define "node-#{i}" do |node|
+        config.vm.define "k8s-node-#{i}" do |node|
             node.vm.box = IMAGE_NAME
             node.vm.network "private_network", ip: "192.168.50.#{i + 10}"
             node.vm.hostname = "node-#{i}"
@@ -27,5 +30,10 @@ Vagrant.configure("2") do |config|
                 ansible.playbook = "k8s/node.yml"
             end
         end
+    end
+
+    # SSH configuration by Ansible
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "ssh.yml"
     end
 end

@@ -11,14 +11,17 @@ This is a guide for anyone wanting to setup multi-node kubernetes cluster.
 - [Getting Started](#getting-started)
   - [Troubleshooting](#troubleshooting)
 - [Deploy to Kubernetes With Helm](#deployment-to-kubernetes-with-helm)
-
+- [SSH Config](#ssh-config)
+- [Using SSHFS to Mount Vagrant on Mac](#using-sshfs-to-mount-vagrant-on-mac)
+- [Remote Kubernetes Cluster](#remote-kubernetes-cluster)
+- [K8s Dashboard](https://github.com/kubernetes/dashboard/wiki/Accessing-Dashboard---1.7.X-and-above)
 
 &nbsp;
 
 Prerequisite
 --
 
-- [Vagrant](https://github.com/sayems/vagrant.resources)
+The only pre-requisite for this guide is that you have [Homebrew](https://brew.sh/) installed. Homebrew is a package manager for the Mac. You’ll also need [Homebrew Cask](https://caskroom.github.io/), which you can install after Homebrew by running ```brew tap caskroom/cask``` in your Terminal.
 
 
 [top](#table-of-contents)
@@ -105,8 +108,8 @@ vagrant@k8s-master:~$ kubectl get nodes
 ```
 NAME         STATUS   ROLES    AGE     VERSION
 k8s-master   Ready    master   18m     v1.13.3
-node-1       Ready    <none>   12m     v1.13.3
-node-2       Ready    <none>   6m22s   v1.13.3
+k8s-node-1   Ready    <none>   12m     v1.13.3
+k8s-node-2   Ready    <none>   6m22s   v1.13.3
 ```
 
 &nbsp;
@@ -230,6 +233,57 @@ selenium-grid-selenium-hub            0/1    1           0          0s
 Selenium hub will automatically start-up using port 4444 by default. You can view the status of the hub by opening a browser window and navigating to: ```http://[EC2 PublicIP]:32738/grid/console```
 
 For more information on how to run tests on Selenium Grid, please visit this [link](https://github.com/sayems/selenium.grid)
+
+
+[top](#table-of-contents)
+&nbsp;
+
+
+SSH Config
+--
+If you want to ```ssh``` into your vagrant box without switching into the project directory and typing ```vagrant ssh k8s-1```. Simply copy ```vagrant ssh-config``` to your ```~/.ssh/config```
+
+```
+$ cd ~/Vagrant
+$ vagrant ssh-config >> ~/.ssh/config
+```
+This will allow you to use ```ssh k8s-1``` from anywhere.
+
+[top](#table-of-contents)
+&nbsp;
+
+
+Using SSHFS to Mount Vagrant on Mac
+--
+
+Copy your public key to your Vagrant box
+```bash
+$ ssh-copy-id vagrant@k8s-1
+```
+
+Create a local directory
+```
+$ mkdir ~/Desktop/k8s
+```
+Mounting your remote directory
+```
+$ sshfs vagrant@k8s-1:/home/vagrant ~/Desktop/k8s
+```
+
+[top](#table-of-contents)
+&nbsp;
+
+
+Remote Kubernetes Cluster
+--
+
+To connect to a remote Kubernetes cluster from you Mac, you'll need copy the Kubernetes credentials to your home directory as shown below.
+
+```bash
+scp -r vagrant@k8s-1:/home/vagrant/.kube ~/.kube/
+```
+
+That’s all you have to do. Your local Kubectl should be able to connect with the remote Kubernetes cluster now.
 
 
 [top](#table-of-contents)
