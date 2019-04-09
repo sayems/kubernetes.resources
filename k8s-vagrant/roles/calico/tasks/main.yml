@@ -1,0 +1,6 @@
+- name: Install calico pod network
+  become: false
+  shell: |
+    wget https://docs.projectcalico.org/v3.6/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml -O calico.yaml
+    sed -i "s/192.168.0.0/'"172.16.0.0/16"'/g" calico.yaml
+    kubectl apply -f calico.yaml

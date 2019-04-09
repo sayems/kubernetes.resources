@@ -1,0 +1,26 @@
+- name: Add an apt signing key for Docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add apt repository for stable version
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+
+- name: Install docker and its dependecies
+  apt: 
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce=18.06.2~ce~3-0~ubuntu
+    - containerd.io
+  notify:
+    - docker status
+
+- name: Add vagrant user to docker group
+  user:
+    name: vagrant
+    group: docker

@@ -1,0 +1,6 @@
+- name: Get IP enp0s8 addr
+  shell: ifconfig enp0s8 | grep 'inet' | cut -d{{':'}} -f2 | awk '{ print $2 }'
+  register: output
+
+- name: Configure kubelet
+  shell: echo 'Environment="KUBELET_EXTRA_ARGS=--node-ip={{ output.stdout }}"' >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf

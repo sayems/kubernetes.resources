@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+    - setup:
+
+- hosts: masters
+  become: true
+  gather_facts: true
+  roles:
+    - components
+    - docker
+    - swap
+    - cluster
+    - kubelet
+    - kubeadm
+    - kubeconfig
+    - iptables
+    - calico
+    - token
+
+- hosts: nodes
+  become: true
+  gather_facts: true
+  roles:
+    - components
+    - docker
+    - swap
+    - cluster
+    - kubelet
+    - iptables
+    - join

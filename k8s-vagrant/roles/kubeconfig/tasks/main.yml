@@ -1,0 +1,16 @@
+- name: create .kube directory (vagrant user)
+  file:
+    path: /home/vagrant/.kube
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0770
+
+- name: copy kubernetes config (vagrant user)
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /home/vagrant/.kube/config
+    owner: vagrant
+    group: vagrant
+    mode: 0770
+    remote_src: yes

@@ -1,2 +1,9 @@
+kubernetes/
 .idea/
 .DS_Store
+k8s-vagrant/calico.yaml
+k8s-vagrant/join-command
+k8s-vagrant/.vagrant/
+k8s-vagrant/master.retry
+k8s-the-hard-way/.vagrant/
+*.log

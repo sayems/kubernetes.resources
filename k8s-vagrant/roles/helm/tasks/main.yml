@@ -1,0 +1,24 @@
+- name: Get Helm manifest
+  get_url:
+    url: https://raw.githubusercontent.com/helm/helm/master/scripts/get
+    dest: ./get.helm.sh
+
+- name: Install Helm
+  shell: bash ./get.helm.sh
+
+- name: Remove Helm manifest
+  file:
+    path: ./get.helm.sh
+    state: absent
+
+- name: Create Helm ServiceAccount
+  shell: kubectl create serviceaccount tiller --namespace=kube-system
+
+- name: Create Helm Roles
+  shell: kubectl create clusterrolebinding tiller-admin --serviceaccount=kube-system:tiller --clusterrole=cluster-admin
+
+- name: Init helm
+  shell: helm init --service-account=tiller
+
+- name: Update Helm repo
+  shell: helm repo update
