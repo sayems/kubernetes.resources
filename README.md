@@ -2,6 +2,7 @@ Table of contents
 --
 - [Setup k8s cluster](https://kubernetes.io/docs/setup/)
   - [**K8s on Vagrant (recommended)**](https://github.com/sayems/kubernetes.resources/tree/master/k8s-vagrant)
+  - [K8s on LXC - Linux Containers](https://github.com/sayems/lxc.resources/wiki/Kubernetes-on-Linux-containers)
   - [Minikube](https://github.com/sayems/kubernetes.resources/wiki/Minikube#table-of-contents)
   - [K8s on Docker for Mac](https://github.com/sayems/kubernetes.resources/wiki/Kubernetes-Cluster-with-Docker-for-Mac)
   - [K8s on AWS with kops + Terraform](https://github.com/sayems/kubernetes.resources/wiki/Kubernetes-cluster-on-AWS-with-kops-and-Terraform)
