@@ -1,0 +1,78 @@
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Creating LoadBalance container
+      lxd_container:
+        name: "{{ item }}"
+        state: started
+        config:
+          limits.cpu: "2"
+          limits.memory: 4GB
+          limits.memory.swap: "false"
+          linux.kernel_modules: ip_tables,ip6_tables,netlink_diag,nf_nat,overlay
+          raw.lxc: "lxc.apparmor.profile=unconfined\nlxc.cap.drop= \nlxc.cgroup.devices.allow=a\nlxc.mount.auto=proc:rw sys:rw"
+          security.nesting: "true"
+          security.privileged: "true"
+        source:
+          type: image
+          mode: pull
+          server: https://images.linuxcontainers.org
+          protocol: simplestreams
+          alias: centos/7/amd64
+        profiles: ["default"]
+        wait_for_ipv4_addresses: true
+        timeout: 600
+      with_items:
+        - haproxy
+
+    - name: Creating Controller container
+      lxd_container:
+        name: "{{ item }}"
+        state: started
+        config:
+          limits.cpu: "2"
+          limits.memory: 4GB
+          limits.memory.swap: "false"
+          linux.kernel_modules: ip_tables,ip6_tables,netlink_diag,nf_nat,overlay
+          raw.lxc: "lxc.apparmor.profile=unconfined\nlxc.cap.drop= \nlxc.cgroup.devices.allow=a\nlxc.mount.auto=proc:rw sys:rw"
+          security.nesting: "true"
+          security.privileged: "true"
+        source:
+          type: image
+          mode: pull
+          server: https://cloud-images.ubuntu.com/releases
+          protocol: simplestreams
+          alias: 18.04/amd64
+        profiles: ["default"]
+        wait_for_ipv4_addresses: true
+        timeout: 600
+      with_items:
+        - controller-1
+        - controller-2
+        - controller-3
+
+    - name: Creating Workers container
+      lxd_container:
+        name: "{{ item }}"
+        state: started
+        config:
+          limits.cpu: "2"
+          limits.memory: 4GB
+          limits.memory.swap: "false"
+          linux.kernel_modules: ip_tables,ip6_tables,netlink_diag,nf_nat,overlay
+          raw.lxc: "lxc.apparmor.profile=unconfined\nlxc.cap.drop= \nlxc.cgroup.devices.allow=a\nlxc.mount.auto=proc:rw sys:rw"
+          security.nesting: "true"
+          security.privileged: "true"
+        source:
+          type: image
+          mode: pull
+          server: https://cloud-images.ubuntu.com/releases
+          protocol: simplestreams
+          alias: 18.04/amd64
+        profiles: ["default"]
+        wait_for_ipv4_addresses: true
+        timeout: 600
+      with_items:
+        - worker-1
+        - worker-2
+        - worker-3

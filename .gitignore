@@ -7,3 +7,4 @@ k8s-vagrant/.vagrant/
 k8s-vagrant/master.retry
 k8s-the-hard-way/.vagrant/
 *.log
+ansible_fact_caching.cache/

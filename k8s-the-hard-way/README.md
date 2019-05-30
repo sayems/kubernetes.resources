@@ -2,7 +2,7 @@
 
 Kubernetes (K8S) is one of the most popular container orchestration tools available nowadays. It is available on all major cloud providers, which makes it easy to create a k8s cluster with a few clicks.
 
-However, I believe is it important to learn how to install k8s from scratch, you can learn a lot just from the installation process. I am going to walk through how to install k8s from scratch in a development enviroment, using Vagrant box. Ininstallation is further automated with Ansible. 
+However, I believe is it important to learn how to install k8s from scratch, you can learn a lot just from the installation process. I am going to walk through how to install k8s from scratch in a development enviroment, using Linux container. Installation is further automated with Ansible. 
 
 &nbsp;
 
@@ -31,7 +31,7 @@ Table of contents
 Prerequisite
 --
 
-- [Vagrant](https://github.com/sayems/vagrant.resources)
+- [LXC/LXD](https://github.com/sayems/lxc.resources)
 - [Ansible](https://github.com/sayems/ansible.resources)
 
 
@@ -50,33 +50,35 @@ Navigate to ```k8s-the-hard-way``` directory
 $ cd kubernetes.resources/k8s-the-hard-way
 ```
 
-### Start Vagrant
+### Start Linux Container
 
-Now run the following command to start the Vagrant:
+Now run the following command to start the Linux Container:
 ```bash
-vagrant up
+ansible-playbook playbook.yml
 ```
-Now, wait for ```vagrant``` box to be ready. This might take a while to complete.
+Now, wait for ```Linux``` container to be ready. This might take a while to complete.
 
 
-### SSH into Vagrant box
+### Login into Linux Container
 
- After the Vagrant box has started you need to “ssh” into the machine to  verify that it is running..
+ After the LXD box has started you can login to the Linux Container to  verify that it is running..
  
 ```
-ssh vagrant@192.168.199.11 # master-1
-ssh vagrant@192.168.199.12 # master-2
-ssh vagrant@192.168.199.21 # worker-1
-ssh vagrant@192.168.199.22 # worker-2
-ssh vagrant@192.168.199.31 # loadbalancer-1
+lxc exec loadbalancer bash
+lxc exec controller-1 bash
+lxc exec controller-2 bash
+lxc exec controller-3 bash
+lxc exec worker-1 bash
+lxc exec worker-2 bash
+lxc exec worker-3 bash
 ```
-Now, ```exit``` from vagrant box by executing ```exit``` command in the terminal.
+Now, ```exit``` from Linux Container by executing ```exit``` command in the terminal.
 
 
 ##### Test Ansible Connectivity
 
 ```bash
-ansible --inventory=./hosts -m ping all
+ansible -m ping all
 ```
 ```
 192.168.199.11 | SUCCESS => {
